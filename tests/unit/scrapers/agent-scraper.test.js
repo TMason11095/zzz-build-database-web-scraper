@@ -28,6 +28,7 @@ describe("Agent Page Scraper Tests", () => {
         expect(agentInfo).toHaveProperty('name');
         expect(agentInfo).toHaveProperty('rarity');
         expect(agentInfo).toHaveProperty('attribute');
+        expect(agentInfo).toHaveProperty('specialty');
         expect(agentInfo).toHaveProperty('faction');
     });
     //Agent W-Engines
