@@ -1,5 +1,5 @@
-const { chromium, firefox, webkit } = require('playwright');
-const { scrapeAgentInfoFromAgentPage } = require('./scrapers/agent-scraper');
+import { chromium } from 'playwright';
+import { scrapeAgentInfoFromAgentPage } from './scrapers/agent-scraper.js';
 
 (async () => {
     //Launch the browser
@@ -11,7 +11,9 @@ const { scrapeAgentInfoFromAgentPage } = require('./scrapers/agent-scraper');
         
         //Test agent page
         await page.goto('https://game8.co/games/Zenless-Zone-Zero/archives/436705');
-        await scrapeAgentInfoFromAgentPage(page);
+        const agent = await scrapeAgentInfoFromAgentPage(page);
+
+        const test = "";
         
     }
     catch (error) {

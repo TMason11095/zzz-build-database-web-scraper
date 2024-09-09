@@ -1,26 +1,15 @@
-const puppeteer = require('puppeteer');
-const { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage, scrapeRecDriveDiscSetsFromAgentPage, scrapeRecSkillPriorityFromAgentPage } = require('@scrapers/agent-scraper');
+import { test, expect } from '@playwright/test';
+import { scrapeAgentInfoFromAgentPage } from '../src/scrapers/agent-scraper.js';
 
-let browser;
-let page;
-
-//Use beforeAll to setup the page as all the tests should be read-only
-beforeAll(async () => {
-    //Arrange
-    browser = await puppeteer.launch();
-    page = await browser.newPage();
-    await page.goto(global.AGENT_TEST_PAGE_URL);
-});
-
-//Close the browser after testing
-afterAll(async () => {
-    await browser.close();
-});
+const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
 
 //Agent page tests
-describe("Agent Page Scraper Tests", () => {
+test.describe("Agent Page Scraper Tests", () => {
     //Agent info
-    test("Scrape agent info from the agent's page", async () => {
+    test("Scrape agent info from the agent's page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
         //Act
         const agentInfo = await scrapeAgentInfoFromAgentPage(page);
 
@@ -32,7 +21,10 @@ describe("Agent Page Scraper Tests", () => {
         expect(agentInfo).toHaveProperty('faction');
     });
     //Agent W-Engines
-    test("Scrape agent recommended W-Engines from the agent's page", async () => {
+    test("Scrape agent recommended W-Engines from the agent's page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
         //Act
         const wEngines = await scrapeRecWEnginesFromAgentPage(page);
 
@@ -45,7 +37,10 @@ describe("Agent Page Scraper Tests", () => {
         });
     });
     //Agent Drive Disc Sets
-    test("Scrape agent recommended drive disc sets from the agent's page", async () => {
+    test("Scrape agent recommended drive disc sets from the agent's page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
         //Act
         const driveDiscSets = await scrapeRecDriveDiscSetsFromAgentPage(page);
 
@@ -66,7 +61,10 @@ describe("Agent Page Scraper Tests", () => {
         });
     });
     //Agent Skill Priority
-    test("Scrape agent recommended skill priority from the agent's page", async () => {
+    test("Scrape agent recommended skill priority from the agent's page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
         //Act
         const skillPriority = await scrapeRecSkillPriorityFromAgentPage(page);
 

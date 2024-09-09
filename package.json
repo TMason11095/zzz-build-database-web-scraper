@@ -16,5 +16,9 @@
   },
   "dependencies": {
     "playwright": "^1.45.3"
+  },
+  "type": "module",
+  "imports": {
+    "@scrapers/*": "./src/scrapers/*"
   }
 }

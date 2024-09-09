@@ -1,4 +1,4 @@
-async function scrapeAgentInfoFromAgentPage(page) {
+export async function scrapeAgentInfoFromAgentPage(page) {
     //Find the header for the Agent Information section
     const agentInfoTable = await getSectionTableByPartialHeaderText(page, 'Agent Information');
     //Get the agent name
@@ -59,11 +59,4 @@ async function getCellTextByHeader(table, headerText) {
     const cellText = rawText.trim();
 
     return cellText;
-}
-
-module.exports = {
-    scrapeAgentInfoFromAgentPage,
-    scrapeRecWEnginesFromAgentPage,
-    scrapeRecDriveDiscSetsFromAgentPage,
-    scrapeRecSkillPriorityFromAgentPage
 }
