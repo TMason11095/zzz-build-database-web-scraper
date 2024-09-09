@@ -11,7 +11,7 @@ import { scrapeAgentInfoFromAgentPage } from './scrapers/agent-scraper.js';
         
         //Test agent page
         await page.goto('https://game8.co/games/Zenless-Zone-Zero/archives/436705');
-        const agent = await scrapeAgentInfoFromAgentPage(page);
+        const engine = await scrapeRecWEnginesFromAgentPage(page);
 
         const test = "";
         

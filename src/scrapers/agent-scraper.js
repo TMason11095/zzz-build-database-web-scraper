@@ -27,8 +27,29 @@ export async function scrapeAgentInfoFromAgentPage(page) {
     }
 }
 
-async function scrapeRecWEnginesFromAgentPage(page) {
-
+export async function scrapeRecWEnginesFromAgentPage(page) {
+    //Get the W-Engine table
+    const engineTable = await getSectionTableByPartialHeaderText(page, 'Recommended W-Engines');
+    //Grab all the engine rows
+    const engineRows = await engineTable.locator('tbody tr').all();
+    //Grab the engine order and name from each row (ignoring the first row as that's the header)
+    const engines = [];
+    for (const engineRow of engineRows.slice(1)) {
+        //Get the order
+        const orderElement = await engineRow.locator('th');
+        const order = await orderElement.textContent();
+        //Get the name
+        const nameElement = await engineRow.locator('td a');
+        const nameRaw = await nameElement.textContent();//Contains whitespace
+        const name = nameRaw.trim();
+        //Add to the engine list
+        engines.push({
+            order,
+            name
+        });
+    }
+    //Return the engines
+    return engines;
 }
 
 async function scrapeRecDriveDiscSetsFromAgentPage(page) {

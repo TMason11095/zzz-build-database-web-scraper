@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { scrapeAgentInfoFromAgentPage } from '../src/scrapers/agent-scraper.js';
+import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage } from '../src/scrapers/agent-scraper.js';
 
 const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
 
@@ -31,7 +31,7 @@ test.describe("Agent Page Scraper Tests", () => {
         //Assert
         expect(Array.isArray(wEngines)).toBe(true);
         //Verify the properties of all the w-engine objects
-        wEngines.foreach(wEngine => {
+        wEngines.forEach(wEngine => {
             expect(wEngine).toHaveProperty('order');
             expect(wEngine).toHaveProperty('name');
         });
