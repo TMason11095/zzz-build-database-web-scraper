@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage } from '../src/scrapers/agent-scraper.js';
+import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage, scrapeRecDriveDiscSetsFromAgentPage } from '../src/scrapers/agent-scraper.js';
 
 const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
 
@@ -47,14 +47,14 @@ test.describe("Agent Page Scraper Tests", () => {
         //Assert
         expect(Array.isArray(driveDiscSets)).toBe(true);
         //Verify the drive disc set properties
-        driveDiscSets.foreach(driveDiscSet => {
+        driveDiscSets.forEach(driveDiscSet => {
             //Verify the set properties
             expect(driveDiscSet).toHaveProperty('order');
             expect(driveDiscSet).toHaveProperty('driveDiscs');
             //The set is multiple drive disc objects
             expect(Array.isArray(driveDiscSet.driveDiscs)).toBe(true);
             //Verify the drive disc properties
-            driveDiscSet.foreach(driveDisc => {
+            driveDiscSet.driveDiscs.forEach(driveDisc => {
                 expect(driveDisc).toHaveProperty('name');
                 expect(driveDisc).toHaveProperty('count');
             });

@@ -52,8 +52,47 @@ export async function scrapeRecWEnginesFromAgentPage(page) {
     return engines;
 }
 
-async function scrapeRecDriveDiscSetsFromAgentPage(page) {
+export async function scrapeRecDriveDiscSetsFromAgentPage(page) {
+    //Get the Drive Disc table
+    const discTable = await getSectionTableByPartialHeaderText(page, 'Best Drive Discs and Set Bonuses');
+    //Grab all the disc set rows
+    const discSetRows = await discTable.locator('tbody tr td:nth-child(1)').all();//Only need the 1st child, since the 2nd is just the reasoning paragraph
+    //Grab the disc sets
+    const driveDiscSets = [];
+    const discSetCount = await discSetRows.length;
+    for (let i = 0; i < discSetCount; i++) {
+        //Disc set row
+        const discSetRow = discSetRows[i];
 
+        //Order is just i+1 since discs are already in order, but i starts at 0
+        const order = i + 1;
+
+        //Grab the discs (Name and count aren't easily grouped, so we'll grab both seperately and merge based on index)
+        //Grab the names
+        const discNameElements = await discSetRow.locator('a').all();
+        const discNames = await Promise.all(
+            discNameElements.map(async (discNameElement) => {
+                return await discNameElement.textContent();
+            })
+        )
+        //Grab the counts
+        const discSetFullText = await discSetRow.textContent();
+        const discCountRegex = /\((\d)-pc\)/g;//Matches (*-pc) where * is the count we want
+        const discCounts = splitByRegex(discSetFullText, discCountRegex).map(textNum => parseInt(textNum));//Grabs the count text and converts to ints
+        //Merge the names and counts by index
+        const driveDiscs = discNames.map((name, index) => ({
+            name,
+            count: discCounts[index]//Disc count matches on the name's index
+        }));
+
+        //Add the disc set to the list
+        driveDiscSets.push({
+            order,
+            driveDiscs
+        });
+    }
+    //Return the disc sets
+    return driveDiscSets;
 }
 
 async function scrapeRecSkillPriorityFromAgentPage(page) {
@@ -80,4 +119,14 @@ async function getCellTextByHeader(table, headerText) {
     const cellText = rawText.trim();
 
     return cellText;
+}
+
+function splitByRegex(text, regex) {
+    //Loop and grab the results from all the regex matches found
+    const results = [];
+    let matches;
+    while (matches = regex.exec(text)) {//Check for a match till one isn't found
+        results.push(matches[1]);//Index 1 contains the dynamic portion of the match
+    }
+    return results;
 }
