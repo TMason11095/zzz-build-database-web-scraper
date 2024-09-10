@@ -95,12 +95,35 @@ export async function scrapeRecDriveDiscSetsFromAgentPage(page) {
     return driveDiscSets;
 }
 
-async function scrapeRecSkillPriorityFromAgentPage(page) {
+export async function scrapeRecSkillPriorityFromAgentPage(page) {
+    //Get the skill table
+    const skillTable = await getSectionTableByPartialHeaderText(page, 'Skill Priority');
+    //Return the skills
+    return {
+        coreSkill: await getSkillPriorityFromTable(skillTable, 'Core Skill'),
+        basicAttack: await getSkillPriorityFromTable(skillTable, 'Basic Attack'),
+        dodge: await getSkillPriorityFromTable(skillTable, 'Dodge'),
+        assist: await getSkillPriorityFromTable(skillTable, 'Assist'),
+        specialAttack: await getSkillPriorityFromTable(skillTable, 'Special Attack'),
+        chainAttack: await getSkillPriorityFromTable(skillTable, 'Chain Attack')
+    }
+}
 
+async function getSkillPriorityFromTable(table, skillName) {
+    //Get the row that has the given skill name
+    const skillRow = await table.locator(`tr:has(td:nth-child(1):has-text("${skillName}"))`);//Has the skill name in the 1st column
+    //Get the priority from that row (2nd column)
+    const skillPriorityElement = await skillRow.locator('td:nth-child(2)');
+    //Get the priority star rating (★★☆☆☆)
+    const skillPriorityStars = await skillPriorityElement.textContent();
+    //Convert the star rating to a numeric rating (★★☆☆☆ => 2)
+    const skillPriority = (skillPriorityStars.match(/★/g)).length;
+
+    return skillPriority;
 }
 
 async function getSectionTableByPartialHeaderText(page, partialHeaderText) {
-    const sectionHeadersSelector = 'body div.l-content div.l-3col div.l-3colMain div.l-3colMain__center div.archive-style-wrapper h3';
+    const sectionHeadersSelector = 'body div.l-content div.l-3col div.l-3colMain div.l-3colMain__center div.archive-style-wrapper h3, h2';
 
     //Find the header that contains the given text
     const targetHeader = await page.locator(sectionHeadersSelector, { hasText: new RegExp('^.*' + partialHeaderText + '$') });

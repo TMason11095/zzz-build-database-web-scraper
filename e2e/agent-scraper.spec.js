@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage, scrapeRecDriveDiscSetsFromAgentPage } from '../src/scrapers/agent-scraper.js';
+import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage, scrapeRecDriveDiscSetsFromAgentPage, scrapeRecSkillPriorityFromAgentPage } from '../src/scrapers/agent-scraper.js';
 
 const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
 
