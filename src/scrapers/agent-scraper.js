@@ -1,3 +1,7 @@
+export async function scrapeAgentPage(page) {
+    //Return the agent components as a single object
+}
+
 export async function scrapeAgentInfoFromAgentPage(page) {
     //Find the header for the Agent Information section
     const agentInfoTable = await getSectionTableByPartialHeaderText(page, 'Agent Information');

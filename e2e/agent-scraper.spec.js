@@ -5,6 +5,17 @@ const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/4
 
 //Agent page tests
 test.describe("Agent Page Scraper Tests", () => {
+    //Agent Page
+    test("Scrape agent page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
+        //Act
+        const agent = await agentScraper.scrapeAgentPage(page);
+
+        //Assert
+        expectAgent(agent);
+    })
     //Agent info
     test("Scrape agent info from the agent's page", async ({ page }) => {
         //Arrange
@@ -63,6 +74,24 @@ test.describe("Agent Page Scraper Tests", () => {
 });
 
 //Helper functions to reuse expected property checks:
+
+function expectAgent(agent) {
+    //Agent info
+    expect(agent).toHaveProperty('agentInfo');
+    expectAgentInfo(agent.agentInfo);
+    //W-engines
+    expect(agent).toHaveProperty('wEngines');
+    expectWEngines(agent.wEngines);
+    //Drive disc sets
+    expect(agent).toHaveProperty('driveDiscSets');
+    expectDriveDiscSets(agent.driveDiscSets);
+    //Skill priority
+    expect(agent).toHaveProperty('skillPriority');
+    expectSkillPriority(agent.skillPriority);
+    //Core skill materials
+    expect(agent).toHaveProperty('coreSkillMaterials');
+    expectCoreSkillMaterials(agent.coreSkillMaterials);
+}
 
 function expectAgentInfo(agentInfo) {
     expect(agentInfo).toHaveProperty('name');
