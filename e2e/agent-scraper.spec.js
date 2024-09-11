@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { scrapeAgentInfoFromAgentPage, scrapeRecWEnginesFromAgentPage, scrapeRecDriveDiscSetsFromAgentPage, scrapeRecSkillPriorityFromAgentPage } from '../src/scrapers/agent-scraper.js';
+import * as agentScraper from '../src/scrapers/agent-scraper.js';
 
 const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
 
@@ -11,7 +11,7 @@ test.describe("Agent Page Scraper Tests", () => {
         await page.goto(TEST_AGENT_PAGE_URL);
 
         //Act
-        const agentInfo = await scrapeAgentInfoFromAgentPage(page);
+        const agentInfo = await agentScraper.scrapeAgentInfoFromAgentPage(page);
 
         //Assert
         expect(agentInfo).toHaveProperty('name');
@@ -26,7 +26,7 @@ test.describe("Agent Page Scraper Tests", () => {
         await page.goto(TEST_AGENT_PAGE_URL);
 
         //Act
-        const wEngines = await scrapeRecWEnginesFromAgentPage(page);
+        const wEngines = await agentScraper.scrapeRecWEnginesFromAgentPage(page);
 
         //Assert
         expect(Array.isArray(wEngines)).toBe(true);
@@ -42,7 +42,7 @@ test.describe("Agent Page Scraper Tests", () => {
         await page.goto(TEST_AGENT_PAGE_URL);
 
         //Act
-        const driveDiscSets = await scrapeRecDriveDiscSetsFromAgentPage(page);
+        const driveDiscSets = await agentScraper.scrapeRecDriveDiscSetsFromAgentPage(page);
 
         //Assert
         expect(Array.isArray(driveDiscSets)).toBe(true);
@@ -66,7 +66,7 @@ test.describe("Agent Page Scraper Tests", () => {
         await page.goto(TEST_AGENT_PAGE_URL);
 
         //Act
-        const skillPriority = await scrapeRecSkillPriorityFromAgentPage(page);
+        const skillPriority = await agentScraper.scrapeRecSkillPriorityFromAgentPage(page);
 
         //Assert
         expect(skillPriority).toHaveProperty('coreSkill');
@@ -75,5 +75,17 @@ test.describe("Agent Page Scraper Tests", () => {
         expect(skillPriority).toHaveProperty('assist');
         expect(skillPriority).toHaveProperty('specialAttack');
         expect(skillPriority).toHaveProperty('chainAttack');
+    });
+    //Agent Core Skill Upgrade Materials
+    test("Scrape agent core skill upgrade materials from the agent's page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_AGENT_PAGE_URL);
+
+        //Act
+        const coreSkillMaterials = await agentScraper.scrapeCoreSkillMaterialsFromAgentPage(page);
+
+        //Assert
+        expect(coreSkillMaterials).toHaveProperty('aRankMaterial');
+        expect(coreSkillMaterials).toHaveProperty('sRankMaterial');
     });
 });

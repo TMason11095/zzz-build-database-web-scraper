@@ -109,6 +109,10 @@ export async function scrapeRecSkillPriorityFromAgentPage(page) {
     }
 }
 
+export async function scrapeCoreSkillMaterialsFromAgentPage(page) {
+    
+}
+
 async function getSkillPriorityFromTable(table, skillName) {
     //Get the row that has the given skill name
     const skillRow = await table.locator(`tr:has(td:nth-child(1):has-text("${skillName}"))`);//Has the skill name in the 1st column
