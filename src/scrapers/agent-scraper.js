@@ -110,7 +110,26 @@ export async function scrapeRecSkillPriorityFromAgentPage(page) {
 }
 
 export async function scrapeCoreSkillMaterialsFromAgentPage(page) {
-    
+    //Get the upgrade material table
+    const materialTable = await getSectionTableByPartialHeaderText(page, 'Total Upgrade Materials');
+    //Get the header section for the core skill materials
+    const coreSkillMaterialsHeaderSec = await materialTable.locator('tr', { hasText: 'Total Core Skill Upgrade Materials' });
+    //Get the core skill materials section (next sibling)
+    const coreSkillMaterialsSec = await getFollowingSibling(coreSkillMaterialsHeaderSec);
+    //Return the materials
+    return {
+        sRank: await getMaterialNameFromCoreSkillMaterialsContainer(coreSkillMaterialsSec, 'x9'),
+        aRank: await getMaterialNameFromCoreSkillMaterialsContainer(coreSkillMaterialsSec, 'x60')
+    }
+}
+
+async function getMaterialNameFromCoreSkillMaterialsContainer(container, materialCountText) {
+    //Get the specified material container
+    const materialContainer = await container.locator('td div', { hasText: materialCountText }).locator('a');
+    //Get the material name
+    const materialName = await materialContainer.textContent().then(text => text.trim());
+
+    return materialName;
 }
 
 async function getSkillPriorityFromTable(table, skillName) {
