@@ -1,5 +1,12 @@
 export async function scrapeAgentPage(page) {
     //Return the agent components as a single object
+    return {
+        agentInfo: await scrapeAgentInfoFromAgentPage(page),
+        wEngines: await scrapeRecWEnginesFromAgentPage(page),
+        driveDiscSets: await scrapeRecDriveDiscSetsFromAgentPage(page),
+        skillPriority: await scrapeRecSkillPriorityFromAgentPage(page),
+        coreSkillMaterials: await scrapeCoreSkillMaterialsFromAgentPage(page),
+    }
 }
 
 export async function scrapeAgentInfoFromAgentPage(page) {
