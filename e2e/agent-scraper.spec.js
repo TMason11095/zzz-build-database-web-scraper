@@ -1,7 +1,24 @@
 import { test, expect } from '@playwright/test';
 import * as agentScraper from '../src/scrapers/agent-scraper.js';
+import * as agentListScraper from '../src/scrapers/agent-list-scraper.js';
 
 const TEST_AGENT_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/436705";
+const TEST_ALL_AGENTS_PAGE_URL = "https://game8.co/games/Zenless-Zone-Zero/archives/435684";
+
+//Agent list page tests
+test.describe("Agent List Page Scraper Tests", () => {
+    //Agent List Page
+    test("Scrape agent list page", async ({ page }) => {
+        //Arrange
+        await page.goto(TEST_ALL_AGENTS_PAGE_URL);
+
+        //Act
+        const agents = await agentListScraper.scrapePlayableAgentList(page);
+
+        //Assert
+        const test = "";
+    })
+})
 
 //Agent page tests
 test.describe("Agent Page Scraper Tests", () => {

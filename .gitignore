@@ -132,3 +132,6 @@ dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Cached files
+src/data/cache/
