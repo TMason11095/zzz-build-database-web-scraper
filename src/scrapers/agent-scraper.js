@@ -1,3 +1,5 @@
+import { getFollowingSiblingByPartialHeaderText, getFollowingSibling } from '../utils/scraper-helpers/playwright-extensions.js';
+
 export async function scrapeAgentPage(page) {
     //Return the agent components as a single object
     return {
@@ -11,7 +13,7 @@ export async function scrapeAgentPage(page) {
 
 export async function scrapeAgentInfoFromAgentPage(page) {
     //Find the header for the Agent Information section
-    const agentInfoTable = await getSectionTableByPartialHeaderText(page, 'Agent Information');
+    const agentInfoTable = await getFollowingSiblingByPartialHeaderText(page, 'Agent Information');
     //Get the agent name
     const nameContainer = await agentInfoTable.locator('tbody tr td b.a-bold').first();
     const name = await nameContainer.textContent();
@@ -40,7 +42,7 @@ export async function scrapeAgentInfoFromAgentPage(page) {
 
 export async function scrapeRecWEnginesFromAgentPage(page) {
     //Get the W-Engine table
-    const engineTable = await getSectionTableByPartialHeaderText(page, 'Recommended W-Engines');
+    const engineTable = await getFollowingSiblingByPartialHeaderText(page, 'Recommended W-Engines');
     //Grab all the engine rows
     const engineRows = await engineTable.locator('tbody tr').all();
     //Grab the engine order and name from each row (ignoring the first row as that's the header)
@@ -65,7 +67,7 @@ export async function scrapeRecWEnginesFromAgentPage(page) {
 
 export async function scrapeRecDriveDiscSetsFromAgentPage(page) {
     //Get the Drive Disc table
-    const discTable = await getSectionTableByPartialHeaderText(page, 'Best Drive Discs and Set Bonuses');
+    const discTable = await getFollowingSiblingByPartialHeaderText(page, 'Best Drive Discs and Set Bonuses');
     //Grab all the disc set rows
     const discSetRows = await discTable.locator('tbody tr td:nth-child(1)').all();//Only need the 1st child, since the 2nd is just the reasoning paragraph
     //Grab the disc sets
@@ -108,7 +110,7 @@ export async function scrapeRecDriveDiscSetsFromAgentPage(page) {
 
 export async function scrapeRecSkillPriorityFromAgentPage(page) {
     //Get the skill table
-    const skillTable = await getSectionTableByPartialHeaderText(page, 'Skill Priority');
+    const skillTable = await getFollowingSiblingByPartialHeaderText(page, 'Skill Priority');
     //Return the skills
     return {
         coreSkill: await getSkillPriorityFromTable(skillTable, 'Core Skill'),
@@ -122,7 +124,7 @@ export async function scrapeRecSkillPriorityFromAgentPage(page) {
 
 export async function scrapeCoreSkillMaterialsFromAgentPage(page) {
     //Get the upgrade material table
-    const materialTable = await getSectionTableByPartialHeaderText(page, 'Total Upgrade Materials');
+    const materialTable = await getFollowingSiblingByPartialHeaderText(page, 'Total Upgrade Materials');
     //Get the header section for the core skill materials
     const coreSkillMaterialsHeaderSec = await materialTable.locator('tr', { hasText: 'Total Core Skill Upgrade Materials' });
     //Get the core skill materials section (next sibling)
@@ -154,19 +156,6 @@ async function getSkillPriorityFromTable(table, skillName) {
     const skillPriority = (skillPriorityStars.match(/★/g)).length;
 
     return skillPriority;
-}
-
-async function getSectionTableByPartialHeaderText(page, partialHeaderText) {
-    const sectionHeadersSelector = 'body div.l-content div.l-3col div.l-3colMain div.l-3colMain__center div.archive-style-wrapper h3, h2';
-
-    //Find the header that contains the given text
-    const targetHeader = await page.locator(sectionHeadersSelector, { hasText: new RegExp('^.*' + partialHeaderText + '$') });
-    //Next sibling is the table
-    return await getFollowingSibling(targetHeader);
-}
-
-async function getFollowingSibling(container) {
-    return await container.locator('xpath=following-sibling::*[1]');
 }
 
 async function getCellTextByHeader(table, headerText) {
